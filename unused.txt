@@ -1,0 +1,93 @@
+html
+<div class="container">
+        <div class="grid"></div>
+        <div class="palette">
+          <div class="color" data-color="tan"></div>
+          <div class="color" data-color="green"></div>
+          <div class="color" data-color="white"></div>
+          <div class="color" data-color="black"></div>
+        </div>
+      </div>
+
+css
+.container {
+    display: grid;
+    height: 100vh;
+    place-items: center;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    height: 500px;
+    width: 500px;
+  }
+  
+  .cell {
+    border: 1px solid lightblue;
+  }
+  
+  .palette {
+    position: absolute;
+    bottom: 0;
+    left: 125px;
+    
+    display: grid;
+    width: 250px;
+    height: 50px;
+    
+    grid-template-columns: repeat(4, 1fr);
+    
+    .color {
+      &:nth-child(1) {
+        background-color: tan;
+      }
+      &:nth-child(2) {
+        background-color: green;
+      }
+      &:nth-child(3) {
+        background-color: white;
+      }
+      &:nth-child(4) {
+        background-color: black;
+      }
+    }
+  }
+
+
+js
+document.addEventListener("DOMContentLoaded", function() {
+    const colors = document.querySelectorAll('.color');
+    const gridElement = document.querySelector('.grid');
+    
+    let currentColor = "black";
+    
+    const activate = (event) => {
+      if (event.target.style.backgroundColor && event.target.style.backgroundColor !== 'transparent') {
+        event.target.style.backgroundColor = 'transparent';
+      } else {
+        event.target.style.backgroundColor = currentColor;    
+      }
+    }
+    
+    const changeColor = (event) => {
+      currentColor = event.target.attributes["data-color"].value;
+    }
+    
+    colors.forEach(color => {
+      color.addEventListener("click", changeColor);
+    })
+    
+    for (let i = 0; i < 24 * 24; i++) {
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+      
+      gridElement.appendChild(cell);
+    }
+    
+    const cells = document.querySelectorAll('.cell');
+    
+    cells.forEach(cell => {
+      cell.addEventListener('click', activate);
+    });
+  });

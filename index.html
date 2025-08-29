@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="styles.css" />
+    <title>Pixel Editor</title>
+  </head>
+  <body>
+    <nav class="navbar">
+      <h1>Pixel Art Editor</h1>
+
+      <form action="">
+        <label for="canvas-size">Canvas size</label>
+        <select name="canvas-size" id="canvas-size">
+          <option value="8">8x8</option>
+          <option value="16">16x16</option>
+          <option value="32">32x32</option>
+          <option value="64">64x64</option>
+          <option value="128">128x128</option>
+        </select>
+      </form>
+
+      <button>Download image</button>
+    </nav>
+
+    <div class="main">
+      <section class="color-wheel"></section>
+      
+      <section class="canvas">
+        <canvas width="300" height="300"></canvas>
+      </section>
+
+      <section class="toolbar">
+        <button>Pencil</button>
+        <button>Eraser</button>
+        <button>Undo</button>
+        <button>Redo</button>
+        <button>Fill</button>
+        <button>Clear canvas</button>
+      </section>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
