@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
+    
     <title>Pixel Editor</title>
   </head>
   <body>
@@ -25,13 +26,20 @@
     </nav>
 
     <div class="main">
-      <section class="color-wheel"></section>
+      <section class="color-wheel sidebar">
+        <button class="color"></button>
+        <button class="color"></button>
+        <button class="color"></button>
+        <button class="color"></button>
+        <button class="color"></button>
+        <button class="color"></button>
+      </section>
       
       <section class="canvas">
         <canvas width="300" height="300"></canvas>
       </section>
 
-      <section class="toolbar">
+      <section class="toolbar sidebar">
         <button class="tool-icon"><i class="fa-solid fa-pencil"></i></button>
         <button class="tool-icon"><i class="fa-solid fa-eraser"></i></button>
         <button class="tool-icon"><i class="fa-solid fa-fill"></i></button>
@@ -40,8 +48,9 @@
         <button class="tool-icon"><i class="fa-solid fa-trash"></i></button>
       </section>
     </div>
-
+    
     <script src="script.js"></script>
+     
     <script src="https://kit.fontawesome.com/18aba390b9.js" crossorigin="anonymous"></script>
   </body>
 </html>

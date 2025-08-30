@@ -1,0 +1,43 @@
+.container {
+    display: grid;
+    height: 100vh;
+    place-items: center;
+  }
+  
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(24, 1fr);
+    height: 500px;
+    width: 500px;
+  }
+  
+  .cell {
+    border: 1px solid lightblue;
+  }
+  
+  .palette {
+    position: absolute;
+    bottom: 0;
+    left: 125px;
+    
+    display: grid;
+    width: 250px;
+    height: 50px;
+    
+    grid-template-columns: repeat(4, 1fr);
+    
+    .color {
+      &:nth-child(1) {
+        background-color: tan;
+      }
+      &:nth-child(2) {
+        background-color: green;
+      }
+      &:nth-child(3) {
+        background-color: white;
+      }
+      &:nth-child(4) {
+        background-color: black;
+      }
+    }
+  }
