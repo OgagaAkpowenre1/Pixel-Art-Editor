@@ -71,6 +71,10 @@ button:hover {
 
 .main >  .canvas {
     flex: 8;
+    border: 1px solid black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .main > .canvas > canvas {
@@ -83,10 +87,11 @@ button:hover {
     flex: 1;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    
     height:fit-content;
     padding-bottom: 3rem;
     gap: 5px;
-    overflow: auto;
+    overflow-y: auto;
 }
 
 .main > .toolbar {
@@ -136,5 +141,20 @@ button:hover {
 
     .main {
         flex-direction: column;
+    }
+
+    .main > .sidebar {
+        flex: 1;
+        display: grid;
+        /* grid-template-columns: 1fr 1fr; */
+        grid-template-rows: 1fr;
+        height:fit-content;
+        padding-bottom: 3rem;
+        gap: 5px;
+        overflow-y: auto;
+    }
+
+    .main > .canvas {
+        flex: 4;
     }
 }
