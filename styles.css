@@ -21,8 +21,11 @@ button {
     background: transparent;
 }
 
+/* Improve button hover effects */
 button:hover {
     background-color: chartreuse;
+    transform: translateY(-2px);
+    transition: all 0.2s ease;
 }
 
 /* Navbar styles */
@@ -81,6 +84,7 @@ button:hover {
     border: 1px black solid;
     max-width: 100%;
     max-height: 100%;
+    cursor: crosshair;
 }
 
 .main > .sidebar {
@@ -112,8 +116,13 @@ button:hover {
 .main > .color-wheel > .color {
     width: 40px;
     height: 40px;
-    background-color: blue;
-    
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.main > .color-wheel > .color.selected {
+    border: 3px solid #333;
+    transform: scale(1.1);
 }
 
 
