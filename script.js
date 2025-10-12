@@ -80,7 +80,7 @@ function setupEventListeners(){
     elements.sizeSelect.addEventListener('change', handleSizeChange);
 
     setupToolEvents();
-
+    setupKeyboardShortcuts();
     //Canvas drawing events
     elements.canvas.addEventListener('mousedown', startDrawing);
     elements.canvas.addEventListener('mousemove', draw);
