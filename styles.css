@@ -109,6 +109,21 @@ button:hover {
     font-size: 1.5rem;
 }
 
+.main > .toolbar> .tool-icon.active {
+    background-color: chartreuse;
+    transform: scale(1.1);
+}
+
+.main > .toolbar> .tool-icon:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.main > .toolbar> .tool-icon:disabled:hover {
+    background-color: transparent;
+    transform: none;
+}
+
 .main > .color-wheel {
     border: 1px solid green;
 }

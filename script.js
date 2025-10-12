@@ -4,7 +4,12 @@ const state = {
     currentTool: 'pencil',
     currentColor: '#000000',
     grid: [],
-    isDrawing: false
+    isDrawing: false,
+    canvasDisplaySize: 500,
+    history: [],
+    historyIndex: -1,
+    redoHistory: [],
+    maxHistory: 50
 };
 const DEFAULT_COLORS = ['#000000', '#FFFFFF', '#FF0000', '#00FF00', '#0000FF', '#FFFF00', '#FF00FF', '#00FFFF'];
 const elements = {
@@ -12,23 +17,60 @@ const elements = {
     colorButtons: document.querySelectorAll('.color'),
     toolButtons: document.querySelectorAll('.tool-icon'),
     sizeSelect: document.getElementById('canvas-size'),
-    downloadBtn: document.getElementById('download-btn')
+    downloadBtn: document.querySelector('button') // Fixed: removed 'download-btn' ID since your HTML doesn't have it
 };
 
 function init(){
     console.log("Setting up editor!");
-        
-        // Set initial size from dropdown
-        state.gridSize = parseInt(elements.sizeSelect.value);
     
-        // Set up event listeners
-        setupEventListeners();
-        
-        // Initialize color palette
-        setupColorPalette();
-        
-        // Create initial grid
-        createGrid();
+    state.gridSize = parseInt(elements.sizeSelect.value);
+    setupEventListeners();
+    setupColorPalette();
+    createGrid();
+    
+    // Save initial empty state
+    saveState();
+    updateUndoRedoButtons();
+    
+    console.log("Setup complete!");
+}
+
+// Add to setupEventListeners()
+function setupToolEvents() {
+    elements.toolButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            const tool = e.currentTarget.dataset.tool;
+            
+            // Handle undo/redo separately from tool switching
+            if (tool === 'undo') {
+                undo();
+            } else if (tool === 'redo') {
+                redo();
+            } else if (tool === 'clear') {
+                clearCanvas();
+            } else {
+                switchTool(tool);
+            }
+        });
+    });
+}
+
+function switchTool(toolName) {
+    // Don't switch tool for undo/redo/clear - they're actions, not tools
+    if (['undo', 'redo', 'clear'].includes(toolName)) {
+        return;
+    }
+    
+    state.currentTool = toolName;
+    updateActiveToolUI();
+    
+    // Change cursor based on tool
+    const cursorMap = {
+        pencil: 'crosshair',
+        eraser: 'cell',
+        fill: 'crosshair'
+    };
+    elements.canvas.style.cursor = cursorMap[toolName] || 'default';
 }
 
 function setupEventListeners(){
@@ -36,6 +78,8 @@ function setupEventListeners(){
     
     // Listen for size changes
     elements.sizeSelect.addEventListener('change', handleSizeChange);
+
+    setupToolEvents();
 
     //Canvas drawing events
     elements.canvas.addEventListener('mousedown', startDrawing);
@@ -51,56 +95,61 @@ function setupEventListeners(){
     console.log("Event listeners set!")
 }
 
+function setupKeyboardShortcuts() {
+    document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey || e.metaKey) {
+            if (e.key === 'z') {
+                e.preventDefault();
+                if (e.shiftKey) {
+                    redo();
+                } else {
+                    undo();
+                }
+            }
+        }
+    });
+}
+
 function createGrid(){
     console.log("Creating grid!")
     const gridSize = state.gridSize;
-    const canvasSize = 300; 
-    const pixelSize = canvasSize / gridSize; // Size of each pixel in screen pixels
-    
-    // Set canvas drawing buffer size
-    elements.canvas.width = 300;
-    elements.canvas.height = 300;
 
-    //Initialize grid state
+    // Adjust display size based on grid density
+    if (gridSize <= 16) {
+        state.canvasDisplaySize = 500;      // Large cells
+    } else if (gridSize <= 64) {
+        state.canvasDisplaySize = 600;      // Medium cells  
+    } else {
+        state.canvasDisplaySize = 1600;      // Smaller cells but more space
+    }
+
+    // Set canvas drawing buffer size
+    elements.canvas.width = state.canvasDisplaySize;
+    elements.canvas.height = state.canvasDisplaySize;
+
+    //Initialize grid state - FIXED THE INFINITE LOOP
     state.grid = [];
     for (let y = 0; y < gridSize; y++){
         state.grid[y] = []
-        for (let x = 0; x < gridSize; x++){
+        for (let x = 0; x < gridSize; x++){  // ← FIXED: changed 'y' to 'x'
             state.grid[y][x] = '#FFFFFF'
         }
     }
 
     //draw the grid
     drawGrid();
-    
-    // const ctx = elements.canvas.getContext('2d');
-    
-    // // Draw grid by creating individual pixel cells
-    // for (let x = 0; x < gridSize; x++) {
-    //     for (let y = 0; y < gridSize; y++) {
-    //         // Draw pixel border
-    //         ctx.strokeStyle = '#000000';
-    //         ctx.strokeRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-            
-    //         // Draw white fill
-    //         ctx.fillStyle = '#FFFFFF';
-    //         ctx.fillRect(x * pixelSize, y * pixelSize, pixelSize, pixelSize);
-    //     }
-    // }
-
     console.log("Grid created")
 }
-
 
 function drawGrid(){
     console.log("Drawing grid!")
     const ctx = elements.canvas.getContext('2d');
     const gridSize = state.gridSize;
-    const canvasSize = 300;
-    const pixelSize = canvasSize / gridSize;
+    const displaySize = state.canvasDisplaySize;
+    const pixelSize = displaySize / gridSize;
 
     //clear the entire canvas
-    ctx.clearRect(0, 0, canvasSize, canvasSize);
+    ctx.clearRect(0, 0, displaySize, displaySize);
 
     //Draw each pixel
     for (let y = 0; y < gridSize; y++){
@@ -108,8 +157,8 @@ function drawGrid(){
             const pixelX = x * pixelSize;
             const pixelY = y * pixelSize;
 
-            //Draw pixel fill
-            ctx.fillStyle = state.grid[y][x];
+            //Draw pixel fill - FIXED: consistent indexing
+            ctx.fillStyle = state.grid[y][x];  // ← FIXED: changed [x][y] to [y][x]
             ctx.fillRect(pixelX, pixelY, pixelSize, pixelSize);
 
             //Draw pixel border
@@ -118,20 +167,19 @@ function drawGrid(){
             ctx.strokeRect(pixelX, pixelY, pixelSize, pixelSize);
         }
     }
-    console.log("Grid drawn")
+    console.log("Grid drawn!")
 }
 
 function getGridCoordinates(clientX, clientY){
     const canvasRect = elements.canvas.getBoundingClientRect();
-    const canvasSize = 300;
+    const displaySize = state.canvasDisplaySize;
     const gridSize = state.gridSize;
-    const pixelSize = canvasSize / gridSize;
+    const pixelSize = displaySize / gridSize;
 
     //Calculate relative position within the canvas - FIXED: use the parameters
     const x = clientX - canvasRect.left;  // ← ADDED: calculate x position
     const y = clientY - canvasRect.top;   // ← ADDED: calculate y position
-
-    //Calculate relative position within the canvas
+    
     const gridX = Math.floor(x / pixelSize);
     const gridY = Math.floor(y / pixelSize);
 
@@ -142,30 +190,11 @@ function getGridCoordinates(clientX, clientY){
     return null
 }
 
-// function drawGridLines(ctx, gridSize){
-//     console.log("Drawing grid!")
-//     ctx.strokeStyle = '#000000';
-//     ctx.lineWidth = 0.1;
-
-//     //Draw vertical lines
-//     for(let x=0; x<=gridSize;x++){
-//         ctx.beginPath();
-//         ctx.moveTo(x, 0);
-//         ctx.lineTo(x, gridSize);
-//         ctx.stroke();
-//     }
-
-//     // Draw horizontal lines
-//     for (let y = 0; y <= gridSize; y++) {
-//         ctx.beginPath();
-//         ctx.moveTo(0, y);
-//         ctx.lineTo(gridSize, y);
-//         ctx.stroke();
-//     }
-// }
-
 function handleSizeChange(){
-    state.gridSize = parseInt(elements.sizeSelect.value)
+    state.gridSize = parseInt(elements.sizeSelect.value);
+    state.history = [];
+    state.historyIndex = -1;
+    state.redoHistory = [];
     createGrid(); 
 }
 
@@ -222,12 +251,29 @@ function stopDrawing(){
     state.isDrawing = false;
 }
 
-function drawPixel(x, y){
-    //Update grid state
-    state.grid[y][x] = state.currentColor;
-
-    //Redraw the grid
-    drawGrid();
+function drawPixel(x, y) {
+    let colorToUse;
+    
+    switch(state.currentTool) {
+        case 'pencil':
+            colorToUse = state.currentColor;
+            break;
+        case 'eraser':
+            colorToUse = '#FFFFFF'; // White
+            break;
+        case 'fill':
+            // We'll implement this later
+            return; // Don't draw single pixels for fill
+        default:
+            colorToUse = state.currentColor;
+    }
+    
+    // Only save state if pixel actually changes
+    if (state.grid[y][x] !== colorToUse) {
+        saveState(); // For undo - save BEFORE changing
+        state.grid[y][x] = colorToUse;
+        drawGrid();
+    }
 }
 
 // Touch event handlers for mobile
@@ -249,6 +295,79 @@ function handleTouchMove(e) {
     const coords = getGridCoordinates(touch.clientX, touch.clientY);
     if (coords) {
         drawPixel(coords.x, coords.y);
+    }
+}
+
+function clearCanvas() {
+    saveState(); // Save current state before clearing
+    const gridSize = state.gridSize;
+    for (let y = 0; y < gridSize; y++) {
+        for (let x = 0; x < gridSize; x++) {
+            state.grid[y][x] = '#FFFFFF';
+        }
+    }
+    drawGrid();
+}
+
+// History functions
+function saveState() {
+    // Don't save if we're in the middle of undo/redo
+    if (state.historyIndex < state.history.length - 1) {
+        // We've done some undos, so remove future states
+        state.history = state.history.slice(0, state.historyIndex + 1);
+    }
+    
+    // Create a deep copy of the grid
+    const gridCopy = state.grid.map(row => [...row]);
+    state.history.push(gridCopy);
+    state.historyIndex = state.history.length - 1;
+    
+    // Limit history size
+    if (state.history.length > state.maxHistory) {
+        state.history.shift();
+        state.historyIndex--;
+    }
+
+    updateUndoRedoButtons();
+}
+
+function undo() {
+    if (state.historyIndex > 0) {
+        state.historyIndex--;
+        state.grid = state.history[state.historyIndex].map(row => [...row]);
+        drawGrid();
+        updateUndoRedoButtons();
+    }
+}
+
+function redo() {
+    if (state.historyIndex < state.history.length - 1) {
+        state.historyIndex++;
+        state.grid = state.history[state.historyIndex].map(row => [...row]);
+        drawGrid();
+        updateUndoRedoButtons();
+    }
+}
+
+function updateUndoRedoButtons() {
+    // Visual feedback for undo/redo availability
+    const undoBtn = document.querySelector('[data-tool="undo"]');
+    const redoBtn = document.querySelector('[data-tool="redo"]');
+    
+    if (undoBtn) undoBtn.disabled = state.historyIndex <= 0;
+    if (redoBtn) redoBtn.disabled = state.historyIndex >= state.history.length - 1;
+}
+
+function updateActiveToolUI() {
+    // Remove active class from all tools
+    elements.toolButtons.forEach(button => {
+        button.classList.remove('active');
+    });
+    
+    // Add active class to current tool
+    const activeTool = document.querySelector(`[data-tool="${state.currentTool}"]`);
+    if (activeTool) {
+        activeTool.classList.add('active');
     }
 }
 

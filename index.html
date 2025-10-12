@@ -18,7 +18,7 @@
           <option value="16">16x16</option>
           <option value="32">32x32</option>
           <option value="64">64x64</option>
-          <option value="128">128x128</option>
+          <!-- <option value="128">128x128</option> -->
         </select>
       </form>
 
@@ -36,18 +36,18 @@
       </section>
       
       <section class="canvas">
-        <canvas width="300" height="300">
+        <canvas>
           This s where the editor would be if your browser supported Canvas elements
         </canvas>
       </section>
 
       <section class="toolbar sidebar">
-        <button class="tool-icon"><i class="fa-solid fa-pencil"></i></button>
-        <button class="tool-icon"><i class="fa-solid fa-eraser"></i></button>
-        <button class="tool-icon"><i class="fa-solid fa-fill"></i></button>
-        <button class="tool-icon"><i class="fa-solid fa-arrow-rotate-left"></i></button>
-        <button class="tool-icon"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-        <button class="tool-icon"><i class="fa-solid fa-trash"></i></button>
+        <button class="tool-icon" data-tool="pencil"><i class="fa-solid fa-pencil"></i></button>
+        <button class="tool-icon" data-tool="eraser"><i class="fa-solid fa-eraser"></i></button>
+        <button class="tool-icon" data-tool="fill"><i class="fa-solid fa-fill"></i></button>
+        <button class="tool-icon" data-tool="undo"><i class="fa-solid fa-arrow-rotate-left"></i></button>
+        <button class="tool-icon" data-tool="redo"><i class="fa-solid fa-arrow-rotate-right"></i></button>
+        <button class="tool-icon" data-tool="clear"><i class="fa-solid fa-trash"></i></button>
       </section>
     </div>
     
