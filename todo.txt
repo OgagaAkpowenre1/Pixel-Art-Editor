@@ -1,1 +1,1 @@
-Todo: color selection expansion
+Todo: fix styling
