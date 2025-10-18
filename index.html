@@ -4,10 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="styles.css" />
-    
+
     <title>Pixel Editor</title>
   </head>
   <body>
+    <!-- Main App -->
+
+    <!-- Navbar -->
     <nav class="navbar">
       <h1>Pixel Art Editor</h1>
 
@@ -24,8 +27,11 @@
 
       <button id="download-btn">Download image</button>
     </nav>
+    <!-- Navbar End -->
 
+    <!-- Main App Body -->
     <div class="main">
+      <!-- Color Wheel Section (Left Side) -->
       <section class="color-wheel sidebar">
         <button class="color"></button>
         <button class="color"></button>
@@ -33,25 +39,129 @@
         <button class="color"></button>
         <button class="color"></button>
         <button class="color"></button>
+        <button
+          id="add-color-btn"
+          class="color add-color"
+          title="Add custom color"
+        >
+          <i class="fa-solid fa-plus"></i>
+        </button>
       </section>
-      
+      <!-- Color Wheel Section (Left Side) End -->
+
+      <!-- Canvas Section (Middle Side) -->
       <section class="canvas">
         <canvas>
-          This s where the editor would be if your browser supported Canvas elements
+          This s where the editor would be if your browser supported Canvas
+          elements
         </canvas>
       </section>
+      <!-- Canvas Section (Middle Side) End -->
 
+      <!-- Toolbar Section (Right Side) -->
       <section class="toolbar sidebar">
-        <button class="tool-icon" data-tool="pencil"><i class="fa-solid fa-pencil"></i></button>
-        <button class="tool-icon" data-tool="eraser"><i class="fa-solid fa-eraser"></i></button>
-        <button class="tool-icon" data-tool="fill"><i class="fa-solid fa-fill"></i></button>
-        <button class="tool-icon" data-tool="undo"><i class="fa-solid fa-arrow-rotate-left"></i></button>
-        <button class="tool-icon" data-tool="redo"><i class="fa-solid fa-arrow-rotate-right"></i></button>
-        <button class="tool-icon" data-tool="clear"><i class="fa-solid fa-trash"></i></button>
+        <button class="tool-icon" data-tool="pencil">
+          <i class="fa-solid fa-pencil"></i>
+        </button>
+        <button class="tool-icon" data-tool="eraser">
+          <i class="fa-solid fa-eraser"></i>
+        </button>
+        <button class="tool-icon" data-tool="fill">
+          <i class="fa-solid fa-fill"></i>
+        </button>
+        <button class="tool-icon" data-tool="undo">
+          <i class="fa-solid fa-arrow-rotate-left"></i>
+        </button>
+        <button class="tool-icon" data-tool="redo">
+          <i class="fa-solid fa-arrow-rotate-right"></i>
+        </button>
+        <button class="tool-icon" data-tool="clear">
+          <i class="fa-solid fa-trash"></i>
+        </button>
       </section>
+      <!-- Toolbar Section (Right Side) End -->
     </div>
+    <!-- Main App Body End -->
 
-    <div id="download-modal" class="modal" style="display: none;">
+    <!-- Color Picker Modal Section -->
+    <div id="color-picker-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <h3>Add Custom Color</h3>
+
+        <div class="color-picker-options">
+          <!-- Color Wheel Picker -->
+          <div class="picker-section">
+            <label>Color Wheel:</label>
+            <input type="color" id="color-wheel-input" value="#ff0000" />
+          </div>
+
+          <!-- HEX Input -->
+          <div class="picker-section">
+            <label>HEX Color:</label>
+            <input
+              type="text"
+              id="hex-input"
+              placeholder="#ff0000"
+              maxlength="7"
+            />
+          </div>
+
+          <!-- RGB Inputs -->
+          <div class="picker-section">
+            <label>RGB Color:</label>
+            <div class="rgb-inputs">
+              <input
+                type="number"
+                id="r-input"
+                placeholder="R"
+                min="0"
+                max="255"
+                value="255"
+              />
+              <input
+                type="number"
+                id="g-input"
+                placeholder="G"
+                min="0"
+                max="255"
+                value="0"
+              />
+              <input
+                type="number"
+                id="b-input"
+                placeholder="B"
+                min="0"
+                max="255"
+                value="0"
+              />
+            </div>
+          </div>
+
+          <!-- Preview -->
+          <div class="picker-section">
+            <label>Preview:</label>
+            <div
+              id="color-preview"
+              style="
+                width: 100px;
+                height: 50px;
+                border: 1px solid #000;
+                background-color: #ff0000;
+              "
+            ></div>
+          </div>
+        </div>
+
+        <div class="modal-buttons">
+          <button id="add-custom-color">Add Color</button>
+          <button id="cancel-color-picker">Cancel</button>
+        </div>
+      </div>
+    </div>
+    <!-- Color Picker Modal Section End -->
+
+    <!-- Download Modal Section -->
+    <div id="download-modal" class="modal" style="display: none">
       <div class="modal-content">
         <h3>Download options</h3>
         <p>Choose how you want to export your pixel art</p>
@@ -75,18 +185,20 @@
           </button>
         </div>
 
-        <div id="custom-scale-input" style="display:none; margin-top:1rem;">
+        <div id="custom-scale-input" style="display: none; margin-top: 1rem">
           <label for="scale-input">Scale factor (1-50):</label>
-          <input type="number" id="scale-input" min="1" max="50" value="10">
+          <input type="number" id="scale-input" min="1" max="50" value="10" />
           <button id="custom-download">Download</button>
         </div>
 
-        <button id="cancel-download" style="margin-top: 1rem;">Cancel</button>
+        <button id="cancel-download" style="margin-top: 1rem">Cancel</button>
       </div>
     </div>
-    
-    <!-- <script src="script.js"></script> -->
+
     <script type="module" src="script.js"></script>
-    <script src="https://kit.fontawesome.com/18aba390b9.js" crossorigin="anonymous"></script>
+    <script
+      src="https://kit.fontawesome.com/18aba390b9.js"
+      crossorigin="anonymous"
+    ></script>
   </body>
 </html>

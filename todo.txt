@@ -1,1 +1,1 @@
-Todo: download functionality, color selection expansion
+Todo: color selection expansion

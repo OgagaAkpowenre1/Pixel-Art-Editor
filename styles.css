@@ -208,7 +208,7 @@ button:hover {
 }
 
 .modal > .modal-content > #custom-scale-input input{
-    margin: 0 0.5rem;
+    margin: 0 0.5rem; 
     padding: 0.25rem;
     border: 1px solid #ccc;
     font-family: 'Pixelify Sans', sans-serif;
@@ -217,6 +217,86 @@ button:hover {
 .modal > .modal-content > #cancel-download{
     width: 100%;
     padding: 0.5rem;
+}
+
+/* Color Picker Modal Styles */
+.color-picker-options {
+    margin: 1rem 0;
+}
+
+.picker-section {
+    margin-bottom: 1rem;
+}
+
+.picker-section label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+}
+
+#color-wheel-input {
+    width: 100%;
+    height: 50px;
+    border: 2px solid #333;
+    border-radius: 4px;
+}
+
+#hex-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 2px solid #333;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    text-transform: uppercase;
+}
+
+.rgb-inputs {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.rgb-inputs input {
+    flex: 1;
+    padding: 0.5rem;
+    border: 2px solid #333;
+    border-radius: 4px;
+    font-family: 'Pixelify Sans', sans-serif;
+    text-align: center;
+}
+
+#color-preview {
+    border-radius: 4px;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.modal-buttons button {
+    flex: 1;
+    padding: 0.5rem;
+}
+
+/* Add Color Button */
+.add-color {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    background: linear-gradient(45deg, #666, #999);
+    color: white;
+}
+
+.add-color:hover {
+    background: linear-gradient(45deg, #777, #aaa);
+    transform: scale(1.1);
+}
+
+/* Custom color buttons */
+.color.custom {
+    border: 2px dashed #333;
 }
 
 /* Responsive styles */

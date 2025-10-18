@@ -9,6 +9,7 @@ export const state = {
     history: [],
     historyIndex: -1,
     maxHistory: 50,
+    customColors: []
 };
 
 export const DEFAULT_COLORS = [
@@ -18,9 +19,21 @@ export const DEFAULT_COLORS = [
 
 // Initialize DOM elements when document is ready
 export const elements = {
-    get canvas() { return document.querySelector("canvas"); },
-    get colorButtons() { return document.querySelectorAll(".color"); },
-    get toolButtons() { return document.querySelectorAll(".tool-icon"); },
-    get sizeSelect() { return document.getElementById("canvas-size"); },
-    get downloadBtn() { return document.querySelector("button"); }
+    // Regular properties instead of getters
+    canvas: null,
+    colorButtons: null,
+    toolButtons: null,
+    sizeSelect: null,
+    downloadBtn: null,
+    addColorBtn: null
 };
+
+// Function to initialize elements (call this in your init)
+export function initializeElements() {
+    elements.canvas = document.querySelector("canvas");
+    elements.colorButtons = document.querySelectorAll(".color");
+    elements.toolButtons = document.querySelectorAll(".tool-icon");
+    elements.sizeSelect = document.getElementById("canvas-size");
+    elements.downloadBtn = document.querySelector("button");
+    elements.addColorBtn = document.getElementById('add-color-btn');
+}
