@@ -50,6 +50,40 @@
         <button class="tool-icon" data-tool="clear"><i class="fa-solid fa-trash"></i></button>
       </section>
     </div>
+
+    <div id="download-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <h3>Download options</h3>
+        <p>Choose how you want to export your pixel art</p>
+
+        <div class="download-options">
+          <button class="download-option" data-scale="1">
+            <strong>1:1 Scale</strong>
+            <span>Perfect for Aseprite, Libresprite, etc.</span>
+            <small>Each pixel is 1 pixel</small>
+          </button>
+
+          <button class="download-option" data-scale="10">
+            <strong>10x Scale</strong>
+            <span>Good for viewing and sharing</span>
+            <small>Each pixel is 10 pixels</small>
+          </button>
+
+          <button class="download-option" data-scale="custom">
+            <strong>Custom Scale</strong>
+            <span>Choose your own size</span>
+          </button>
+        </div>
+
+        <div id="custom-scale-input" style="display:none; margin-top:1rem;">
+          <label for="scale-input">Scale factor (1-50):</label>
+          <input type="number" id="scale-input" min="1" max="50" value="10">
+          <button id="custom-download">Download</button>
+        </div>
+
+        <button id="cancel-download" style="margin-top: 1rem;">Cancel</button>
+      </div>
+    </div>
     
     <script src="script.js"></script>
     <script src="https://kit.fontawesome.com/18aba390b9.js" crossorigin="anonymous"></script>

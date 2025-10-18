@@ -140,6 +140,84 @@ button:hover {
     transform: scale(1.1);
 }
 
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal > .modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    border: 2px solid black;
+    max-width: 500px;
+    width: 90%;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.modal > .modal-content > .download-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.modal > .modal-content > .download-options > .download-option {
+    padding: 1rem;
+    border: 2px solid #ccc;
+    background: white;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal > .modal-content > .download-options > .download-option:hover {
+    border-color: chartreuse;
+    background-color: #f9fff0;
+}
+
+.modal > .modal-content > .download-options > .download-option strong{
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.modal > .modal-content > .download-options > .download-option span{
+    display: block;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.modal > .modal-content > .download-options > .download-option small{
+    display: block;
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: 0.25rem;
+}
+
+.modal > .modal-content > #custom-scale-input{
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.modal > .modal-content > #custom-scale-input input{
+    margin: 0 0.5rem;
+    padding: 0.25rem;
+    border: 1px solid #ccc;
+    font-family: 'Pixelify Sans', sans-serif;
+}
+
+.modal > .modal-content > #cancel-download{
+    width: 100%;
+    padding: 0.5rem;
+}
 
 /* Responsive styles */
 

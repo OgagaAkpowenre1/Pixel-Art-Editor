@@ -8,9 +8,9 @@ const state = {
   canvasDisplaySize: 500,
   history: [],
   historyIndex: -1,
-  redoHistory: [],
   maxHistory: 50,
 };
+
 const DEFAULT_COLORS = [
   "#000000",
   "#FFFFFF",
@@ -40,6 +40,9 @@ function init() {
   // Save initial empty state
   saveState();
   updateUndoRedoButtons();
+
+  //setup download modal
+  setupDownloadModal;
 
   console.log("Setup complete!");
 }
@@ -87,6 +90,12 @@ function setupEventListeners() {
 
   // Listen for size changes
   elements.sizeSelect.addEventListener("change", handleSizeChange);
+
+  //Listen for image download
+  elements.downloadBtn.addEventListener("click", showDownloadOptions);
+
+  //Setup download modal
+  setupDownloadModal();
 
   setupToolEvents();
   setupKeyboardShortcuts();
@@ -203,7 +212,6 @@ function handleSizeChange() {
   state.gridSize = parseInt(elements.sizeSelect.value);
   state.history = [];
   state.historyIndex = -1;
-  state.redoHistory = [];
   createGrid();
 }
 
@@ -275,6 +283,7 @@ function drawPixel(x, y) {
         saveState();
         floodFill(x, y, state.currentColor);
         drawGrid();
+        return; //return so default code is not run
     default:
       colorToUse = state.currentColor;
   }
@@ -415,6 +424,103 @@ function updateActiveToolUI() {
   if (activeTool) {
     activeTool.classList.add("active");
   }
+}
+
+function showDownloadOptions(){
+  const modal = document.getElementById('download-modal');
+  modal.style.display = 'flex';
+}
+
+function hideDownloadOptions(){
+  const modal = document.getElementById('download-modal');
+  modal.style.display = 'none';
+}
+
+function setupDownloadModal(){
+  const modal = document.getElementById('download-modal');
+  const cancelBtn = document.getElementById('cancel-download');
+  const customDownloadBtn = document.getElementById('custom-download');
+  const customInput = document.getElementById('custom-scale-input');
+
+  //setup option buttons
+  document.querySelectorAll('.download-option').forEach(button => {
+    button.addEventListener('click', (e) => {
+      console.log("Button clicked")
+      const scale = e.currentTarget.dataset.scale;
+
+      if (scale === 'custom'){
+        customInput.style.display = 'block';
+      } else {
+        downloadWithScale(parseInt(scale));
+        hideDownloadOptions();
+      };
+    });
+  });
+
+  //Custom download button
+  customDownloadBtn.addEventListener('click', () => {
+    const scaleInput = document.getElementById('scale-input');
+    const scale = parseInt(scaleInput.value) || 10;
+    const clampedScale = Math.min(Math.max(scale, 1), 50);
+    downloadWithScale(clampedScale);
+    hideDownloadOptions();
+  });
+
+  //Cancel button
+  cancelBtn.addEventListener('click', hideDownloadOptions);
+
+  //Close modal when clicking outside
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal){
+      hideDownloadOptions();
+    }
+  })
+};
+
+function downloadWithScale(scale) {
+  const gridSize = state.gridSize;
+  
+  // Create temporary canvas
+  const tempCanvas = document.createElement('canvas');
+  tempCanvas.width = gridSize * scale;
+  tempCanvas.height = gridSize * scale;
+  const tempCtx = tempCanvas.getContext('2d');
+  
+  if (scale === 1) {
+      // For 1:1 scale, draw directly without white background
+      // This preserves transparency for professional editors
+      for (let y = 0; y < gridSize; y++) {
+          for (let x = 0; x < gridSize; x++) {
+              tempCtx.fillStyle = state.grid[y][x];
+              tempCtx.fillRect(x, y, 1, 1);
+          }
+      }
+  } else {
+      // For scaled versions, use white background
+      tempCtx.fillStyle = '#FFFFFF';
+      tempCtx.fillRect(0, 0, tempCanvas.width, tempCanvas.height);
+      
+      // Draw scaled pixels
+      for (let y = 0; y < gridSize; y++) {
+          for (let x = 0; x < gridSize; x++) {
+              tempCtx.fillStyle = state.grid[y][x];
+              tempCtx.fillRect(x * scale, y * scale, scale, scale);
+          }
+      }
+  }
+  
+  // Create download
+  const link = document.createElement('a');
+  const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+  const scaleText = scale === 1 ? '1x1' : `${scale}x`;
+  link.download = `pixel-art-${gridSize}x${gridSize}-${scaleText}.png`;
+  link.href = tempCanvas.toDataURL('image/png');
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  console.log(`Image downloaded at ${scale}x scale!`);
 }
 
 // Initialize the application
